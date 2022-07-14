@@ -1,0 +1,159 @@
+#!/bin/zsh
+
+# KTools v 1.0.0 by vie10.
+
+############################################################
+# Variables
+COLOR_PREV="\033[0m"   # Previous color.
+RW_LN="\033[1A\033[0K" # Rewrite previous line.
+COLOR_BAD=$(tput setaf 160)
+COLOR_OK=$(tput setaf 46)
+COLOR_WARN=$(tput setaf 214)
+COLOR_NORMAL=$COLOR_PREV
+
+ICON_TIME="${COLOR_WARN}"
+ICON_ASK="${COLOR_WARN}?"
+ICON_OK="${COLOR_OK}✔"
+ICON_BAD="${COLOR_BAD}✘"
+############################################################
+
+############################################################
+# Env tools
+function onBadEnv() {
+  printBad "Environment $1 isn't provided!"
+}
+
+function ensureEnv() {
+  for REQUIRED_ENV in $*; do
+    if [[ -v "$REQUIRED_ENV" ]]; then
+    else
+      onBadEnv $REQUIRED_ENV
+    fi
+  done
+}
+############################################################
+
+############################################################
+# Time tools
+function currentTimeMillis() {
+  gdate +%s%3N
+}
+
+function measureStart() {
+  MEASURE_START_TIMESTAMP=$(currentTimeMillis)
+}
+
+function measureEnd() {
+  MEASURE_END_TIMESTAMP=$(currentTimeMillis)
+}
+
+function measuredMillis() {
+  echo $(($MEASURE_END_TIMESTAMP - $MEASURE_START_TIMESTAMP))
+}
+############################################################
+
+############################################################
+# String manipulation tools
+function lowercase() {
+  echo "$*" | tr "[:upper:]" "[:lower:]"
+}
+############################################################
+
+############################################################
+# Print tools
+function print() {
+  echo -en "${COLOR_NORMAL}$*${COLOR_PREV}"
+}
+
+function reprint() {
+  echo -en "${RW_LN}${COLOR_NORMAL}$*${COLOR_PREV}"
+}
+
+function println() {
+  echo -e "${COLOR_NORMAL}$*${COLOR_PREV}"
+}
+
+function reprintln() {
+  echo -e "${RW_LN}${COLOR_NORMAL}$*${COLOR_PREV}"
+}
+
+function printAsk() {
+  printIcon "$ICON_ASK" "$*"
+}
+
+function reprintAsk() {
+  reprintIcon "$ICON_ASK" "$*"
+}
+
+function printlnAsk() {
+  printlnIcon "$ICON_ASK" "$*"
+}
+
+function reprintlnAsk() {
+  reprintlnIcon "$ICON_ASK" "$*"
+}
+
+function printOk() {
+  printIcon "$ICON_OK" "$*"
+}
+
+function reprintOk() {
+  reprintIcon "$ICON_OK" "$*"
+}
+
+function printlnOk() {
+  printlnIcon "$ICON_OK" "$*"
+}
+
+function reprintlnOk() {
+  reprintlnIcon "$ICON_OK" "$*"
+}
+
+function printBad() {
+  printIcon "$ICON_BAD" "$*"
+}
+
+function reprintBad() {
+  reprintIcon "$ICON_BAD" "$*"
+}
+
+function printlnBad() {
+  printlnIcon "$ICON_BAD" "$*"
+}
+
+function reprintlnBad() {
+  reprintlnIcon "$ICON_BAD" "$*"
+}
+
+function printWait() {
+  printIcon "$ICON_TIME" "$*"
+}
+
+function reprintWait() {
+  reprintIcon "$ICON_TIME" $*
+}
+
+function printlnWait() {
+  printlnIcon "$ICON_TIME" "$*"
+}
+
+function reprintlnWait() {
+  reprintlnIcon "$ICON_TIME" $*
+}
+
+function reprintIcon() {
+  reprint "${COLOR_NORMAL}[ $1 ${COLOR_NORMAL}]─❯ $2"
+}
+
+function printIcon() {
+  print "${COLOR_NORMAL}[ $1 ${COLOR_NORMAL}]─❯ $2"
+}
+
+function reprintlnIcon() {
+  reprintln "${COLOR_NORMAL}[ $1 ${COLOR_NORMAL}]─❯ $2"
+}
+
+function printlnIcon() {
+  println "${COLOR_NORMAL}[ $1 ${COLOR_NORMAL}]─❯ $2"
+}
+############################################################
